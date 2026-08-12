@@ -50,15 +50,17 @@ export default function Home() {
 
       imageDataUrl: photo.dataUrl,
 
-      /*
-       * IMPORTANT:
-       * Keep the user's exact photo adjustment.
-       */
-      adjustment: photo.adjustment,
+      adjustment: {
+        x: photo.adjustment.x,
+        y: photo.adjustment.y,
+        scale: photo.adjustment.scale,
+      },
+
+      imageWidth: photo.width,
+      imageHeight: photo.height,
     };
 
     setProfile(newProfile);
-
     setLoading(true);
   }
 
@@ -76,19 +78,19 @@ export default function Home() {
 
     setStarted(true);
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    if (typeof window !== "undefined") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   }
 
   return (
     <main className="min-h-screen">
       <DecorativeBackground />
 
-      {loading && (
-        <LoadingReveal onDone={finish} />
-      )}
+      {loading && <LoadingReveal onDone={finish} />}
 
       {!started && !profile ? (
         <Hero
