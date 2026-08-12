@@ -1,0 +1,5 @@
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+const steps=["SCANNING BUILDER PROFILE","BUILDING IDENTITY","GENERATING BUILDER CARD","READY"];
+export function LoadingReveal({onDone}:{onDone:()=>void}){const [index,setIndex]=useState(0);useEffect(()=>{const timers=[220,260,300,260];let total=0;const ids=timers.map((d,i)=>{total+=d;return window.setTimeout(()=>{setIndex(i+1);if(i===timers.length-1)onDone();},total)});return()=>ids.forEach(clearTimeout)},[onDone]);return <div className="fixed inset-0 z-50 grid place-items-center bg-[var(--green)] px-6 text-center text-[var(--cream)]"><div><div className="mx-auto mb-8 h-20 w-20 animate-spin rounded-full border-8 border-white/20 border-t-[var(--yellow)]"/><AnimatePresence mode="wait"><motion.div key={index} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} className="font-display text-3xl font-black sm:text-5xl">{steps[Math.min(index,3)]}</motion.div></AnimatePresence><div className="mt-4 text-xs font-black tracking-[.25em] text-white/50">FRAME / GOA · 2026</div></div></div>}
