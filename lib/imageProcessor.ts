@@ -1,4 +1,3 @@
-import heic2any from "heic2any";
 import { MAX_IMAGE_BYTES } from "./constants";
 
 export async function normalizeImage(file: File): Promise<{ dataUrl: string; width: number; height: number }> {
@@ -9,9 +8,19 @@ export async function normalizeImage(file: File): Promise<{ dataUrl: string; wid
 
   let source: Blob = file;
   if (looksHeic || /image\/(heic|heif)/i.test(file.type)) {
-    try { source = (await heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 })) as Blob; }
-    catch { throw new Error("That HEIC photo could not be processed. Try a JPG or PNG instead."); }
+  try {
+    const { default: heic2any } = await import("heic2any");
+    source = (await heic2any({
+      blob: file,
+      toType: "image/jpeg",
+      quality: 0.9
+    })) as Blob;
+  } catch {
+    throw new Error(
+      "That HEIC photo could not be processed. Try a JPG or PNG instead."
+    );
   }
+}
 
   const bitmap = await createImageBitmap(source);
   const max = 2400;
